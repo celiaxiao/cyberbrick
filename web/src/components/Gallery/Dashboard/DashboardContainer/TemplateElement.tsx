@@ -1,7 +1,3 @@
-/**
- * Created by Jacob Xie on 9/24/2020.
- */
-
 import React, { forwardRef, useImperativeHandle, useLayoutEffect, useRef, useState } from "react"
 
 import * as DataType from "../../GalleryDataType"
@@ -23,7 +19,8 @@ export interface ContainerElementProps {
 }
 
 export interface ContainerElementRef {
-  fetchContent: (date?: string) => void
+  eleId?: string
+  fetchContent: (date?: string, eleId?: string) => void
   fetchContentDates: () => Promise<string[]>
 }
 
@@ -42,7 +39,7 @@ export const TemplateElement =
       if (mpRef.current) setMpHeight(mpRef.current.offsetHeight)
     })
 
-    const fetchContent = (date?: string) => {
+    const fetchContent = (date?: string, eleId?: string) => {
       if (eleId) {
         if (date)
           props.fetchContentFn(eleId, date).then(res => setContent(res))
@@ -59,7 +56,7 @@ export const TemplateElement =
       return []
     }
 
-    useImperativeHandle(ref, () => ({ fetchContent, fetchContentDates }))
+    useImperativeHandle(ref, () => ({ fetchContent, fetchContentDates, eleId }))
 
     const updateContent = (ctt: DataType.Content) => props.updateContentFn(ctt)
 
@@ -92,4 +89,3 @@ TemplateElement.defaultProps = {
   markAvailable: false,
   timeSeries: false
 } as Partial<ContainerElementProps>
-

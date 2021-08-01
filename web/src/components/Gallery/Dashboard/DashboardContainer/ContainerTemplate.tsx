@@ -78,7 +78,10 @@ export const ContainerTemplate =
     const [elements, setElements] = useState<Elements>(props.elements)
 
     // update elements when adding a new element
-    useEffect(() => setElements(props.elements), [props.elements])
+    useEffect(() => {
+      setElements(props.elements)
+      // startFetchAllContents()
+    }, [props.elements])
 
     const elementOnRemove = (id: string) => () => {
       const newElements = removeElementInLayout(id, elements)
@@ -88,9 +91,25 @@ export const ContainerTemplate =
     const onLayoutChange = (layout: Layout[]) =>
       setElements(updateElementInLayout(elements, layout))
 
+    useEffect(() => {
+      console.log("container template eles change", elements)
+    }, [elements])
+
     const startFetchAllContents = () => {
+      console.log(teRefs.current)
       const rf = teRefs.current
-      if (rf) rf.forEach(e => e.fetchContent())
+      // if (rf) {
+      //   console.log("looping teRef", rf[0], rf[1], rf[2])
+      //   // for (let i = 0; i < teRefs.current.length; i++) {
+      //   //   console.log(rf)
+      //   //   let e = teRefs.current[1]
+      //   //   console.log("looping teRef", e)
+      //   // }
+      // }
+      if (rf) rf.forEach(e => {
+        console.log(e)
+        e.fetchContent(undefined, e.eleId)
+      })
     }
 
     const newElement = (name: string, timeSeries: boolean, elementType: DataType.ElementType) => {

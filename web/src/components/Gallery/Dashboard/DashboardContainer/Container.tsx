@@ -2,12 +2,12 @@
  * Created by Jacob Xie on 9/24/2020.
  */
 
-import React, {forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState} from "react"
-import {Tabs} from "antd"
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react"
+import { Tabs } from "antd"
 import _ from "lodash"
 
 import * as DataType from "../../GalleryDataType"
-import {ContainerTemplate, ContainerTemplateRef} from "./ContainerTemplate"
+import { ContainerTemplate, ContainerTemplateRef } from "./ContainerTemplate"
 
 
 export interface ContainerProps {
@@ -44,10 +44,10 @@ interface SelectedPane {
 const getSelectedPane = (templates: DataType.Template[], initId?: string) => {
   if (templates && templates.length > 0) {
     if (initId) {
-      const r = _.find(templates, {id: initId})
-      if (r) return {id: r.id!, index: r.index!, name: r.name!}
+      const r = _.find(templates, { id: initId })
+      if (r) return { id: r.id!, index: r.index!, name: r.name! }
     }
-    return {id: templates[0].id!, index: 0, name: templates[0].name}
+    return { id: templates[0].id!, index: 0, name: templates[0].name }
   }
   return undefined
 }
@@ -115,7 +115,7 @@ export const Container = forwardRef((props: ContainerProps, ref: React.Ref<Conta
 
       if (rf && template) {
         const e = rf.saveElements()
-        return {...template, elements: e}
+        return { ...template, elements: e }
       }
     }
     return template
@@ -133,6 +133,7 @@ export const Container = forwardRef((props: ContainerProps, ref: React.Ref<Conta
    * template's changing triggers `startFetchAllContents`
    */
   useEffect(() => {
+    console.log(template?.elements)
     if (ctRef.current && template) startFetchAllContents()
   }, [template])
 
@@ -140,7 +141,7 @@ export const Container = forwardRef((props: ContainerProps, ref: React.Ref<Conta
     const category = {
       name: props.dashboardInfo.category!.name
     } as DataType.Category
-    props.updateElementContentFn({...ctt, category})
+    props.updateElementContentFn({ ...ctt, category })
   }
 
   const genPane = (t: DataType.Template) => {

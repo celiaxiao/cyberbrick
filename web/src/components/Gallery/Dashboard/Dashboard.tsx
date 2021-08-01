@@ -2,13 +2,13 @@
  * Created by Jacob Xie on 9/25/2020.
  */
 
-import React, {useEffect, useMemo, useRef, useState} from "react"
-import {message} from "antd"
+import React, { useEffect, useMemo, useRef, useState } from "react"
+import { message } from "antd"
 import _ from "lodash"
 
 import * as DataType from "../GalleryDataType"
-import {Controller} from "./DashboardController/Controller"
-import {Container, ContainerRef} from "./DashboardContainer/Container"
+import { Controller } from "./DashboardController/Controller"
+import { Container, ContainerRef } from "./DashboardContainer/Container"
 
 
 export const EditableContext = React.createContext<boolean>(false)
@@ -19,8 +19,8 @@ const dashboardContentUpdate = (contents: DataType.Content[], template: DataType
 
   return contents.map(c => {
     if (c.element!.id === undefined) {
-      const element = {...c.element!, id: elementNameIdMap[c.element!.name]}
-      return {...c, element}
+      const element = { ...c.element!, id: elementNameIdMap[c.element!.name] }
+      return { ...c, element }
     }
     return c
   })
@@ -137,22 +137,24 @@ export const Dashboard = (props: DashboardProps) => {
       message.warn("Copy template failed!")
   }
 
-  const onSaveTemplateAndContents = async () => {
+  const onSaveTemplateAndContents = async (shouldSaveTemplateAndContents: boolean) => {
     if (cRef.current) {
-      const t = cRef.current.saveTemplate()
-      if (t) {
-        await props.saveTemplate(t)
-        if (updatedContents.length > 0) {
-          const updatedTemplate = await props.fetchTemplate(t.id!)
-          const contents = dashboardContentUpdate(updatedContents, updatedTemplate)
-          await updateAllContents(contents)
-          setNewestContent(undefined)
-          setUpdatedContents([])
+      if (shouldSaveTemplateAndContents) {
+        const t = cRef.current.saveTemplate()
+        if (t) {
+          await props.saveTemplate(t)
+          if (updatedContents.length > 0) {
+            const updatedTemplate = await props.fetchTemplate(t.id!)
+            const contents = dashboardContentUpdate(updatedContents, updatedTemplate)
+            await updateAllContents(contents)
+            setNewestContent(undefined)
+            setUpdatedContents([])
+          }
         }
-        cRef.current.fetchTemplate()
-        setRefresh(refresh + 1)
-        return Promise.resolve()
       }
+      cRef.current.fetchTemplate()
+      setRefresh(refresh + 1)
+      return Promise.resolve()
     }
     return Promise.reject(new Error("Invalid template!"))
   }
